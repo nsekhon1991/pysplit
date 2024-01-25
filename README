@@ -1,0 +1,32 @@
+# Clone dockerfile from githuib
+> git clone https://github.com/nsekhon91/pysplit.git
+> cd pysplit
+
+### Build docker image ###
+> docker build -t pysplit . 
+# pysplitv2 is with Ubunntu build
+
+### Run your image and enter into it ###
+> docker run -it pysplit /bin/bash
+
+### Download Example data on local comp and mount to docker container###
+### AND MOUNTING HYPSLIT
+docker run --name pysplitv2 -v /Users/natashasekhon/Projects/pysplit/data:/pysplit/docs/data -v /Users/natashasekhon/Projects/pysplit/hysplit.v5:/pysplit/docs/Hysplitv5 -it pysplitv2 /bin/bash
+
+
+###  OR Can download from Website ###
+> wget -- user username --password paa https://
+
+
+#### Run PySplit testing #####
+
+> cd pysplit/pysplit/docs/examples/
+> apt-get install ftp
+> ftp
+> open arlftp.arlhq.noaa.gov
+
+# TO DOWNLOAD EXAMPLE DATA
+# open filezilla
+# in URL paste ftp.arl.noaa.gov
+# type in username and password a
+# go to folder archives/gdas01
