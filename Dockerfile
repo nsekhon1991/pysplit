@@ -14,6 +14,7 @@ RUN  apt-get install -y python3 \
                        proj-bin \
                        libproj-dev\
                        vim\
+                       libgfortran5\
                        git-all
 
 ##RUN echo "" && dpkg -l
@@ -26,16 +27,22 @@ RUN pip3 install numpy==1.20.3 \
                  scipy==1.7.0\
                  pyshp==2.1.3\
                  cartopy==0.19.0.post1\
-                 pysplit==0.3.6
-
+                 pysplit==0.3.6\
+                 shapely==1.8.5
+                    
 
 #RUN  apt-get install -y geos
 
-RUN pip3 install https://github.com/matplotlib/basemap/archive/master.zip
+RUN pip3 install basemap
+#RUN pip3 install https://github.com/matplotlib/basemap/archive/master.zip
 RUN git clone https://github.com/mscross/pysplit.git
 
 RUN mkdir /pysplit/docs/temp_work
 RUN mkdir /pysplit/docs/temp_store
+RUN mkdir /pysplit/docs/temp_store/results
+
+COPY ./hysplit.v5/testing/ASCDATA.CFG /pysplit/docs/temp_work/
+
 
 RUN sed -i "s/"r\'C:\\/hysplit4\\/working\'"/\'\/pysplit\/docs\/temp_work\'/g" /pysplit/docs/examples/bulk_trajgen_example.py
 RUN sed -i "s/"r\'C:\\/trajectories\\/colgate\'"/\'\/pysplit\/docs\/temp_store\'/g" /pysplit/docs/examples/bulk_trajgen_example.py

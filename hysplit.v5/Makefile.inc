@@ -1,0 +1,131 @@
+#-----------------------------------------------------------------------------
+# Makefile.inc.gfortran - declares options for the GFORTRAN compiler and
+# 			  linker.
+#
+# Last Revised: 23 Aug 2019 - Initial.
+#               26 Aug 2019 - Removed INC and redefined NETINC and NETLIBS.
+#               28 Aug 2019 - Added variables for MPI compilation.
+#               23 Feb 2021 - Added MINC and MLIB for MPI compilation.
+#-----------------------------------------------------------------------------
+# This file is to be included by other Makefiles.
+
+# Need BASH not the default SH
+SHELL=/bin/bash
+
+# NetCDF library
+NETINC= -I/usr/include
+#NETLIBS= -L/usr/lib64 -lnetcdff	# for netCDF4
+NETLIBS= -L/usr/lib/x86_64-linux-gnu -lnetcdff
+#NETLIBS= -L/usr/lib64 -lnetcdf	# for netCDF3
+
+#NETINC= -I/usr/local/include
+#NETLIBS= -L/usr/local/lib -lnetcdff
+#NETINC= -I/usr/local/netCDF4/include
+#NETLIBS= -L/usr/local/netCDF4/lib -lnetcdff
+#NETINC= -I/usr/local/netcdf/netcdf363/include
+#NETLIBS= -L/usr/local/netcdf/netcdf363/lib -lnetcdf
+
+# IOAPI library for the CMAQ converters
+IOAPIINC= -I${HOME}/ioapi-3.2/ioapi
+IOAPILIBS= -L${HOME}/ioapi-3.2/Linux3_x86_64gfort -lioapi -lpthread
+#IOAPIINC= -I/usr/local/include
+#IOAPILIBS= -L/usr/local/lib -lioapi
+
+# ECCODES library for building the API2ARL and ERA2ARL programs
+#ECCODES_TOPDIR= /opt/eccodes
+#ECCODESINC= -I/opt/eccodes/include
+#ECCODESLIBS= -L/opt/eccodes/lib -leccodes_f90 -leccodes 
+ECCODES_TOPDIR= /usr 
+ECCODESINC= -I/usr/lib/x86_64-linux-gnu/fortran/x86_64-linux-gnu-gfortran-9
+ECCODESLIBS= -L/usr/lib/x86_64-linux-gnu -leccodes_f90 -leccodes
+
+# Define C compiler and its options.
+CC=gcc
+CFLAGS=-O2
+
+# Define FORTRAN compiler and its options.
+FC=gfortran
+FFLAGS_FREEFORM= -ffree-form
+FFLAGS=-O2 -fconvert=big-endian -frecord-marker=4 -fPIC
+#FFLAGS=-O2 -fconvert=big-endian -frecord-marker=4
+# additional gfortran diagnostics
+# -Wall -fbounds-check -fbacktrace -finit-local-zero
+
+# MPI compilation
+# generic MPI flags: /usr/local/mpich/bin or /usr/local/mpi/mpich2/bin
+MPIUSE=TRUE
+MPIFC=/usr/bin/mpif90
+#MPIFC=/usr/lib64/mpich/bin/mpif90
+#MPIFC=/usr/lib64/mvapich2/bin/mpif90
+MINC=
+MLIB=
+
+# Application specific options
+# PREP not required for INTEL/PGF; use spaces between options: -D{OPT1} -D{OPT2}
+# required for SGI compilers
+# PREP=-Wf,
+# required for IBM compilers
+# PREP=-WF,
+FFLAGS_HYCS_STD_EXE= -DSTD
+FFLAGS_HYCM_STD_EXE= -DMPI
+FFLAGS_HYCS_ENS_EXE= -DENS
+FFLAGS_HYCM_ENS_EXE= -DENS -DMPI
+FFLAGS_HYCS_VAR_EXE= -DVAR
+FFLAGS_HYCS_GEM_EXE= -DGEM
+FFLAGS_HYCS_IER_EXE= -DIER
+FFLAGS_HYCS_GRS_EXE= -DGRS
+FFLAGS_HYCS_SO2_EXE= -DSO2
+FFLAGS_HYCS_CB4_EXE= -DCB4
+FFLAGS_HYCM_CB4_EXE= -DCB4 -DMPI
+FFLAGS_HYTM_STD_EXE= -DMPI
+FFLAGS_HYTS_ENS_EXE= -DENS
+FFLAGS_HYTS_STD_EXE= -DSTD
+FFLAGS_HYSPTEST_EXE= -DSTD
+FFLAGS_PROFILE_EXE= -DSTD
+FFLAGS_DISPLAY_EXE= -DSTD
+FFLAGS_LATLON_EXE= -DSTD
+FFLAGS_SHOWGRID_EXE= -DSTD
+FFLAGS_DUSTBDY_EXE= -DSTD
+
+# compiler specific flags
+#SUN5 = -O -free
+#AIXC = -O3
+#AIX8 = -O3 -qarch=auto -qmaxmem=-1 -qstrict
+#AIXR = $(AIX8) -qsmp=omp -qsmp=noauto -qsmp=noopt -qnosave 
+#AIX5 = -O -qarch=com -qmaxmem=8192
+#DEC3 = -O -assume byterecl
+#SGI5 = -OPT:Olimit=3091 -bytereclen -freeform 
+#PGF9 = -O1 -Mfree -byteswapio -Mlfs
+#INTL = -O -FR -diag-disable 8290,8291 -assume byterecl -convert big_endian
+#GF95 = -O2 -fendian=big -ffree-form
+# -----------------------
+# standard compilation flags
+#SUN5 = -free $(NETINC)    
+#AIXC = $(NETINC)
+#AIX8 = -qarch=auto -qmaxmem=8192 $(NETINC) -qstrict
+#DEC3 = -assume byterecl $(NETINC)
+#SGI5 = -bytereclen $(NETINC) -freeform 
+#ABSF = -f free $(NETINC)
+#PGF9 = -Mfree -byteswapio $(NETINC)
+#INTL = -FR -assume byterecl -convert big_endian $(NETINC)
+#GF95 = -fendian=big -ffree-form $(NETINC)
+#
+#SUN5 = -O -free
+#AIXC = -O3 -I.
+#AIX5 = -O -qarch=com -qmaxmem=8192 -I.
+#AIX8 = -O3 -qarch=auto -qmaxmem=8192 -qstrict
+#DEC3 = -O -assume byterecl
+#SGI5 = -O -bytereclen -freeform
+#ABSF = -O1 -f free 
+#PGF9 = -O -Mfree -byteswapio
+#PGF9 = -O -Mfree -byteswapio -Mlfs -I.
+#INTL = -O -FR -assume byterecl -convert big_endian -I.
+#INTL = -O -FR -diag-disable 8290,8291 -assume byterecl -convert big_endian -I.
+#GF95 = -O2 -fendian=big -ffree-form 
+
+# other PGF9 options (also -O2 -Munroll -Mnoframe) 
+# PGF9 = -O2 -Mfree -byteswapio -Mlfs -Munroll -I$(INC)
+# -----------------------
+
+# only requred if using the "C" version of the fcsubs IO library
+#CLIB=-lgfortranfcsubs
